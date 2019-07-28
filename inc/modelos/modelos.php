@@ -2,7 +2,7 @@
 
 if(isset($_POST)){
    $nombreUsu = $_POST['usuario'];
-   $pass = $_POST['pass'];
+   $password = $_POST['pass'];
    $accion = $_POST['accion'];
 
    if($accion == 'crear'){
@@ -11,7 +11,7 @@ if(isset($_POST)){
          'opcion' => 12
       ];
 
-      $hashPass = password_hash($pass, PASSWORD_BCRYPT, $opciones);
+      $hashPass = password_hash($password, PASSWORD_BCRYPT, $opciones);
 
       //llamar la conexion
       include_once '../funciones/conexion.php';
@@ -38,7 +38,7 @@ if(isset($_POST)){
 
       echo json_encode($respuesta);
    }
-
+//=========================================================
    if($accion == 'login'){
       //Funcion Login
       include_once '../funciones/conexion.php';
@@ -47,16 +47,25 @@ if(isset($_POST)){
          $stmt = $conn->prepare("SELECT * FROM usuarios WHERE usuario = ?");
          $stmt->bind_param('s', $nombreUsu);
          $stmt->execute();
-         $stmt->bind_result($idUsuario, $nomUsuario, $pasUsuario);
+         $stmt->bind_result($idUsuario, $nomUsuario, $passUsuario);
          $stmt->fetch();
          if($nomUsuario){
-            $respuesta = [
-               'accion' => $accion,
-               'id' => $idUsuario,
-               'usuario' => $nomUsuario,
-               'pass' => $pasUsuario,
-               'respuesta' => 'Correcto'
-            ];
+            if(password_verify($password, $passUsuario)){
+               $respuesta = [
+                  'accion' => $accion,
+                  'id' => $idUsuario,
+                  'usuario' => $nomUsuario,
+                  'respuesta' => 'Correcto',
+               ];
+            }else{
+               $respuesta = [
+                  'accion' => $accion,
+                  'id' => $idUsuario,
+                  'usuario' => $nomUsuario,
+                  'respuesta' => 'Login incorrecto',
+               ];
+            }
+            
          }else{
             $respuesta = [
                'respuesta' => 'error'
