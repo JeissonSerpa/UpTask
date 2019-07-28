@@ -1,6 +1,10 @@
 <?php 
+    session_start();
     include 'inc/funciones/funciones.php';
     include 'inc/template/head.php'; 
+    if(isset($_GET['cerrarSesion'])){
+        $_SESSION = [];
+     }
 ?>
 <div class="contenedor-formulario">
     <h1>UpTask</h1>
