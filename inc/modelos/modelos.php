@@ -51,6 +51,14 @@ if(isset($_POST)){
          $stmt->fetch();
          if($nomUsuario){
             if(password_verify($password, $passUsuario)){
+               //iniciar la sesion
+
+               session_start();
+               $_SESSION['usuario'] = $nomUsuario;
+               $_SESSION['logueo'] = true;
+               $_SESSION['id'] = $idUsuario;
+
+               //respuesta de logueo
                $respuesta = [
                   'accion' => $accion,
                   'id' => $idUsuario,

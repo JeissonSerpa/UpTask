@@ -47,6 +47,18 @@ function validacionFormulario(e){
                      text: 'Su usuario fue creado correctamente'
                      //footer: '<a href>Why do I have this issue?</a>'
                    })
+               }else if(respuesta.accion === 'login'){
+                  Swal.fire({
+                     type: 'success',
+                     title: 'Login Correcto!',
+                     text: 'Precione OK para Ingresar'
+                     //footer: '<a href>Why do I have this issue?</a>'
+                   })
+                   .then(resultado=>{
+                      if(resultado.value){
+                         window.location.href = 'index.php';
+                      }
+                   })
                }
             }else{
                Swal.fire({

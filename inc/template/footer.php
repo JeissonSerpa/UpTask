@@ -2,7 +2,7 @@
 
 <?php
    $actual = nombrePagina();
-   if($actual = 'login' || $actual = 'crear-cuenta'){
+   if($actual == 'login' || $actual == 'crear-cuenta'){
       echo "<script src='js/index.js'></script>";
    }
 ?>
