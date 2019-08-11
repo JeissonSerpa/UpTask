@@ -31,7 +31,7 @@
                 <input type="text" placeholder="Nombre Tarea" class="nombre-tarea"> 
             </div>
             <div class="campo enviar">
-                <input type="hidden" id="<?php echo $idProyecto; ?>" value="id_proyecto">
+                <input type="hidden" id="idProyecto" value="<?php echo $idProyecto; ?>" value="id_proyecto">
                 <input type="submit" class="boton nueva-tarea" value="Agregar">
             </div>
         </form>
@@ -41,7 +41,7 @@
         <h2>Listado de tareas:</h2>
 
         <div class="listado-pendientes">
-            <ul>
+            <ul id="tareas">
                 <li id="tarea:" class="tarea">
                 <p>Cambiar el Logotipo</p>
                     <div class="acciones">

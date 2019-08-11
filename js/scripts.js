@@ -70,7 +70,7 @@ function guardarNuevoProyecto(nombreProyecto){
                title: 'Proyecto Creado!',
                text: 'El Proyecto: ' + phpProyecto + ' se Creo Correctamente'
                //footer: '<a href>Why do I have this issue?</a>'
-             })
+            })
              .then(resultado => {
                 if(resultado.value){
                   window.location.href = `index.php?idRespuesta=${idProyecto}`;
@@ -83,7 +83,7 @@ function guardarNuevoProyecto(nombreProyecto){
                title: 'Error!',
                text: 'huvo un erro no se inserto el registro'
                //footer: '<a href>Why do I have this issue?</a>'
-             })
+            })
          }
       }
    }
@@ -97,6 +97,8 @@ function guardarNuevoProyecto(nombreProyecto){
 function agregarNuevaTarea(e){
    e.preventDefault();
    let nombretarea = document.querySelector('.nombre-tarea').value;
+   let idProyecto = document.querySelector('#idProyecto').value;
+   let contenedorTareas = document.querySelector('#tareas');
    if(nombretarea === ''){
       Swal.fire({
          title: 'Error!',
@@ -105,6 +107,68 @@ function agregarNuevaTarea(e){
       })
    }else{
       //insertar en php
-      console.log('validacion Correcta');
+
+      //Se crea el objeto AJAX
+      xhr = new XMLHttpRequest();
+
+      //almacenar datos a enviar
+
+      let datos = new FormData();
+      datos.append('id', idProyecto);
+      datos.append('nombreTarea', nombretarea);
+      datos.append('accion', 'crear');
+
+      //se abre la conexion
+      xhr.open('POST', 'inc/modelos/modeloTarea.php', true);
+
+      //Respuesta desde php
+      xhr.onload = function(){
+         if(this.status === 200){
+            let respuesta = JSON.parse(xhr.responseText);
+            console.log(respuesta);
+            let tarea = respuesta.tarea,
+               id = respuesta.id,
+               estatus = respuesta.respuesta;
+
+            if(estatus === 'Correcto'){
+               Swal.fire({
+                  type: 'success',
+                  title: 'Tarea Creada!',
+                  text: 'La Tarea: ' + tarea + ' se Creo Correctamente'
+                  //footer: '<a href>Why do I have this issue?</a>'
+               })
+
+               //crear el elemento con la tarea nueva
+
+               let nuevaTarea = document.createElement('li');
+               nuevaTarea.id = `tare:${id}`;
+               nuevaTarea.classList.add('tarea');
+               
+               //unir con el html
+               nuevaTarea.innerHTML = `
+                  <p>${tarea}</p>
+                  <div class="acciones">
+                     <i class="far fa-check-circle"></i>
+                     <i class="fas fa-trash"></i>
+                  </div>
+               `;
+
+               //agreagar al ul padre
+               contenedorTareas.appendChild(nuevaTarea);
+
+               document.querySelector('.agregar-tarea').reset();
+            }else{
+               Swal.fire({
+                  type: 'error',
+                  title: 'Error!',
+                  text: 'huvo un erro no se inserto la tarea'
+                  //footer: '<a href>Why do I have this issue?</a>'
+               })
+            }
+         }
+      }
+
+      //enviar los datos
+      xhr.send(datos);
    }
 }
