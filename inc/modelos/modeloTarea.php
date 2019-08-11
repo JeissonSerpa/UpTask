@@ -1,9 +1,18 @@
 <?php
 
    if(isset($_POST)){
-      $idproyecto = $_POST['id'];
-      $accion = $_POST['accion'];
-      $tarea = $_POST['nombreTarea'];
+      if(isset($_POST['id'])){
+         $idproyecto = $_POST['id'];
+      }
+      if(isset($_POST['accion'])){
+         $accion = $_POST['accion'];
+      }
+      if(isset($_POST['nombreTarea'])){
+         $tarea = $_POST['nombreTarea'];
+      }
+      if(isset($_POST['estado'])){
+         $estado = $_POST['estado'];
+      }
 
       if($accion == 'crear'){
          //llamar la conexion
@@ -32,6 +41,37 @@
 
          echo json_encode($respuesta);
       }
-   }
+
+      if($accion == 'editar'){
+         //llamar la conexion
+         include_once '../funciones/conexion.php';
+
+         try{
+            $stmt = $conn->prepare("UPDATE tareas SET estadoTarea = ? WHERE id = ?");
+            $stmt->bind_param('ii', $estado, $idproyecto);
+            $stmt->execute();
+            if($stmt->affected_rows > 0){
+               $respuesta = [
+                  'respuesta' => 'Correcto',
+                  'accion' => $accion,
+               ];
+            }else{
+               $respuesta = [
+                  'respuesta' => 'Incorrecto',
+                  'accion' => $accion,
+               ];
+            }
+            $stmt->close();
+            $conn->close();
+
+         }catch(Exception $e){
+            $respuesta = [
+               'respuesta' => $e->getMessage()
+            ];
+         }
+
+         echo json_encode($respuesta);
+      }
+   } 
 
 ?>

@@ -9,6 +9,10 @@ function eventoEscucha(e){
    //Evento para agregar tareas
    let botonCrearTarea = document.querySelector('.nueva-tarea');
    botonCrearTarea.addEventListener('click', agregarNuevaTarea);
+
+   //Evento para editar o eliminar tareas
+   let contenedorTareas = document.querySelector('.listado-pendientes');
+   contenedorTareas.addEventListener('click', modificarTarea);
 }
 
 function crearNuevoProyecto(e){
@@ -172,4 +176,50 @@ function agregarNuevaTarea(e){
       //enviar los datos
       xhr.send(datos);
    }
+}
+
+function modificarTarea(e){
+   e.preventDefault();
+
+   if(e.target.classList.contains('fa-check-circle')){
+      if(e.target.classList.contains('completo')){
+         e.target.classList.remove('completo')
+         cambiarTarea(e.target, 0);
+      }else{
+         e.target.classList.add('completo')
+         cambiarTarea(e.target, 1);
+      }
+   }
+   if(e.target.classList.contains('fa-trash')){
+      console.log('eliminar');
+   }
+}
+
+function cambiarTarea(tarea, estado){
+   let idTarea = tarea.parentElement.parentElement.id.split(':');
+   
+   //crear objeto AJAX
+   let xhr = new XMLHttpRequest();
+
+   //almacenar los datos
+   let datos = new FormData();
+   datos.append('id', idTarea[1]);
+   datos.append('estado', estado);
+   datos.append('accion', 'editar');
+
+   //abrir la coneccion
+   xhr.open('POST', 'inc/modelos/modeloTarea.php', true);
+
+   //obtener la respuesta
+   xhr.onload = function(){
+      if(this.status === 200){
+         let respuesta = (xhr.responseText);
+         console.log(respuesta);
+      }else{
+         console.log(this.status);
+      }
+   }
+
+   //Enviar los datos
+   xhr.send(datos);
 }
