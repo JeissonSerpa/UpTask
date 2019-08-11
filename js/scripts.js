@@ -5,6 +5,10 @@ let contenedorProyectos = document.querySelector('#proyectos');
 function eventoEscucha(e){
    let botonCrearProyecto = document.querySelector('.crear-proyecto a');
    botonCrearProyecto.addEventListener('click', crearNuevoProyecto);
+
+   //Evento para agregar tareas
+   let botonCrearTarea = document.querySelector('.nueva-tarea');
+   botonCrearTarea.addEventListener('click', agregarNuevaTarea);
 }
 
 function crearNuevoProyecto(e){
@@ -86,5 +90,21 @@ function guardarNuevoProyecto(nombreProyecto){
 
    //enviar datos
    xhr.send(datos);
+}
 
+//funcion que agrega las tareas Nuevas
+
+function agregarNuevaTarea(e){
+   e.preventDefault();
+   let nombretarea = document.querySelector('.nombre-tarea').value;
+   if(nombretarea === ''){
+      Swal.fire({
+         title: 'Error!',
+         type: 'error',
+         text: 'La Tarea no Puede Estar Vacía'
+      })
+   }else{
+      //insertar en php
+      console.log('validacion Correcta');
+   }
 }
