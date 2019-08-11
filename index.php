@@ -3,15 +3,26 @@
     include 'inc/template/barra.php';
     include 'inc/funciones/funciones.php';
     include 'inc/template/head.php';
+    if(isset($_GET['idRespuesta'])){
+        $idProyecto = $_GET['idRespuesta'];
+    }else{
+        $idProyecto = "";
+    }
 ?>
 
 <div class="contenedor">
     <?php
         include 'inc/template/sidebar.php'; 
+        $proyecto = obtenerProyecto($idProyecto);
+        if($proyecto){
     ?>
     <main class="contenido-principal">
         <h1>
-            <span>Diseño de Página Web</span>
+            <?php
+                foreach($proyecto as $proyecto){
+                    echo "Proyecto: <span>".$proyecto['nombreProyecto']."</span>";
+                }
+            ?>
         </h1>
 
         <form action="#" class="agregar-tarea">
@@ -20,7 +31,7 @@
                 <input type="text" placeholder="Nombre Tarea" class="nombre-tarea"> 
             </div>
             <div class="campo enviar">
-                <input type="hidden" id="id_proyecto" value="id_proyecto">
+                <input type="hidden" id="<?php echo $idProyecto; ?>" value="id_proyecto">
                 <input type="submit" class="boton nueva-tarea" value="Agregar">
             </div>
         </form>
@@ -31,8 +42,7 @@
 
         <div class="listado-pendientes">
             <ul>
-
-                <li id="tarea:<?php echo $tarea['id'] ?>" class="tarea">
+                <li id="tarea:" class="tarea">
                 <p>Cambiar el Logotipo</p>
                     <div class="acciones">
                         <i class="far fa-check-circle"></i>
@@ -42,6 +52,15 @@
             </ul>
         </div>
     </main>
+    <?php 
+        }else{
+            echo "
+                <main class='contenido-principal'>
+                    <h1>Selecciona un Proyecto o Crealo a la Izquierda</h1>
+                </main>
+            ";
+        } 
+    ?>
 </div><!--.contenedor-->
 
 <?php 
