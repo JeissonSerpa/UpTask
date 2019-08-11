@@ -28,4 +28,15 @@
          return false;
       }
    }
+
+   //obtener tareas de los proyectos
+   function listadoTareas($id = null){
+      include 'conexion.php';
+      try{
+      return $conn->query("SELECT id, nombreTarea, estadoTarea FROM tareas WHERE idProyecto = {$id}");
+      }catch(Exceptio $e){
+         echo 'Error: ' . $e->getMessage;
+         return false;
+      }
+   }
 ?>

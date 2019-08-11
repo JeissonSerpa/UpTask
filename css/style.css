@@ -160,7 +160,6 @@ body.index {
 .contenido-principal {
     flex: 1;
     padding: 1rem;
-    overflow: scroll;
 }
 .contenido-principal h1,
 .contenido-principal h2 {

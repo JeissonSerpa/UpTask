@@ -42,13 +42,27 @@
 
         <div class="listado-pendientes">
             <ul id="tareas">
-                <li id="tarea:" class="tarea">
-                <p>Cambiar el Logotipo</p>
-                    <div class="acciones">
-                        <i class="far fa-check-circle"></i>
-                        <i class="fas fa-trash"></i>
-                    </div>
-                </li>  
+                <?php
+                    $tareas = listadoTareas($idProyecto);
+                    if($tareas->num_rows > 0){
+                        foreach($tareas as $tarea){ ?>
+                            <li id="tarea:<?php echo $tarea['id']; ?>" class="tarea">
+                            <p><?php echo $tarea['nombreTarea']; ?></p>
+                                <div class="acciones">
+                                    <i class="far fa-check-circle <?php echo ($tarea['estadoTarea'] === "1" ? 'completo' : '');?>"></i>
+                                    <i class="fas fa-trash"></i>
+                                </div>
+                            </li>
+                <?php
+                        }
+                    }else{
+                        echo "
+                            <li class='tarea' id='noTarea'>
+                                <p>No hay Tareas Disponibles</p>
+                            <li>
+                        ";
+                    }
+                ?> 
             </ul>
         </div>
     </main>

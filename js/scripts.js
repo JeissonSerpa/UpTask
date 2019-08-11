@@ -155,6 +155,7 @@ function agregarNuevaTarea(e){
 
                //agreagar al ul padre
                contenedorTareas.appendChild(nuevaTarea);
+               document.querySelector('#noTarea').remove();
 
                document.querySelector('.agregar-tarea').reset();
             }else{
