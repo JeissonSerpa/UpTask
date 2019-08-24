@@ -65,6 +65,12 @@
                 ?> 
             </ul>
         </div>
+        <div class="avance">
+            <h2>Progreso del Proyecto:</h2>
+            <div id="barraAvance" class="barraAvance">
+                <div class="porcentaje" id="porcentaje"></div>
+            </div>
+        </div>
     </main>
     <?php 
         }else{

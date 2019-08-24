@@ -3,12 +3,21 @@ let contenedorProyectos = document.querySelector('#proyectos');
 eventoEscucha();
 
 function eventoEscucha(e){
+
+   //Document ready
+   document.addEventListener('DOMContentLoaded', function(){
+      actualizarProgreso();
+   })
+
+   //evento que crea nuevo proyecto
    let botonCrearProyecto = document.querySelector('.crear-proyecto a');
    botonCrearProyecto.addEventListener('click', crearNuevoProyecto);
 
    //Evento para agregar tareas
    let botonCrearTarea = document.querySelector('.nueva-tarea');
-   botonCrearTarea.addEventListener('click', agregarNuevaTarea);
+   if(botonCrearTarea !== null){
+      botonCrearTarea.addEventListener('click', agregarNuevaTarea);
+   }
 
    //Evento para editar o eliminar tareas
    let contenedorTareas = document.querySelector('.listado-pendientes');
@@ -164,8 +173,8 @@ function agregarNuevaTarea(e){
 
                //agreagar al ul padre
                contenedorTareas.appendChild(nuevaTarea);
-
                document.querySelector('.agregar-tarea').reset();
+               actualizarProgreso();
             }else{
                Swal.fire({
                   type: 'error',
@@ -195,7 +204,6 @@ function modificarTarea(e){
       }
    }
    if(e.target.classList.contains('fa-trash')){
-      console.log('eliminar');
       Swal.fire({
          title: 'Eliminar Tarea?',
          text: "Si Elimina la Tarea no Podra Recuperarla!",
@@ -244,7 +252,7 @@ function cambiarTarea(tarea, estado){
    xhr.onload = function(){
       if(this.status === 200){
          let respuesta = (xhr.responseText);
-         console.log(respuesta);
+         actualizarProgreso();
       }else{
          console.log(this.status);
       }
@@ -273,7 +281,8 @@ function eliminarTareaDB(tarea){
    //obtener la respuesta
    xhr.onload = function(){
       if(this.status === 200){
-         let respuesta = (xhr.responseText);
+         let respuesta = JSON.parse(xhr.responseText);
+         actualizarProgreso();
 
          //Mensaje sintareas
          let mensajeTareas = document.querySelectorAll('li.tarea');
@@ -291,5 +300,22 @@ function eliminarTareaDB(tarea){
 
    //Enviar los datos
    xhr.send(datos);
+}
 
+function actualizarProgreso(){
+   let tareas = document.querySelectorAll('ul .tarea').length;
+   let completos = document.querySelectorAll('li .completo').length;
+   let porcentajeAvance = Math.round((completos/tareas)*100);
+   let porcentajeBarra = document.querySelector('#porcentaje');
+
+   porcentajeBarra.style.width = porcentajeAvance+'%';
+
+   if(porcentajeAvance === 100){
+      Swal.fire({
+         type: 'success',
+         title: 'Proyecto Completado!',
+         text: 'Completaste Todas las tareas del Proyecto'
+         //footer: '<a href>Why do I have this issue?</a>'
+      })
+   }
 }
