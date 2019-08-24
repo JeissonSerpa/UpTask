@@ -77,6 +77,7 @@
     ?>
 </div><!--.contenedor-->
 
+<!--Agrgando javascript -->
 <?php 
     include 'inc/template/footer.php'; 
 ?>
