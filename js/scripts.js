@@ -142,8 +142,13 @@ function agregarNuevaTarea(e){
                   //footer: '<a href>Why do I have this issue?</a>'
                })
 
-               //crear el elemento con la tarea nueva
+               //Eliminar Tarea Vacia
+               let noTareaAll = document.querySelectorAll('#noTarea');
+               if(noTareaAll.length !== 0){
+                  document.querySelector('#noTarea').remove();
+               }
 
+               //crear el elemento con la tarea nueva
                let nuevaTarea = document.createElement('li');
                nuevaTarea.id = `tare:${id}`;
                nuevaTarea.classList.add('tarea');
@@ -159,7 +164,6 @@ function agregarNuevaTarea(e){
 
                //agreagar al ul padre
                contenedorTareas.appendChild(nuevaTarea);
-               document.querySelector('#noTarea').remove();
 
                document.querySelector('.agregar-tarea').reset();
             }else{
@@ -192,6 +196,32 @@ function modificarTarea(e){
    }
    if(e.target.classList.contains('fa-trash')){
       console.log('eliminar');
+      Swal.fire({
+         title: 'Eliminar Tarea?',
+         text: "Si Elimina la Tarea no Podra Recuperarla!",
+         type: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#d33',
+         confirmButtonText: 'Si, Eliminar!',
+         cancelButtonText: 'Cancelar'
+       }).then((result) => {
+         if (result.value) {
+            let tareaEliminar = e.target.parentElement.parentElement;
+
+            //Eliminar tarea de la base de datos
+            eliminarTareaDB(tareaEliminar);
+
+            //Eliminar tarea del HTML
+            tareaEliminar.remove();
+
+           Swal.fire(
+             'Eliminada!',
+             'La Tarea se Elimino Correctamente.',
+             'success'
+           )
+         }
+       })
    }
 }
 
@@ -222,4 +252,44 @@ function cambiarTarea(tarea, estado){
 
    //Enviar los datos
    xhr.send(datos);
+}
+
+//Funcion para eliminar tarea
+
+function eliminarTareaDB(tarea){
+   let idTarea = tarea.id.split(':');
+   
+   //crear objeto AJAX
+   let xhr = new XMLHttpRequest();
+
+   //almacenar los datos
+   let datos = new FormData();
+   datos.append('id', idTarea[1]);
+   datos.append('accion', 'eliminar');
+
+   //abrir la coneccion
+   xhr.open('POST', 'inc/modelos/modeloTarea.php', true);
+
+   //obtener la respuesta
+   xhr.onload = function(){
+      if(this.status === 200){
+         let respuesta = (xhr.responseText);
+
+         //Mensaje sintareas
+         let mensajeTareas = document.querySelectorAll('li.tarea');
+         let contenedorTareas = document.querySelector('.listado-pendientes ul');
+
+         if(mensajeTareas.length === 0){
+            contenedorTareas.innerHTML = `<li class='tarea' id='noTarea'>
+                                             <p>No hay Tareas Disponibles</p>
+                                          <li>`;
+         }
+      }else{
+         console.log(this.status);
+      }
+   }
+
+   //Enviar los datos
+   xhr.send(datos);
+
 }
