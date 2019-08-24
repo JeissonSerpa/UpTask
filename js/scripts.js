@@ -1,6 +1,6 @@
-eventoEscucha();
-
 let contenedorProyectos = document.querySelector('#proyectos');
+
+eventoEscucha();
 
 function eventoEscucha(e){
    let botonCrearProyecto = document.querySelector('.crear-proyecto a');
